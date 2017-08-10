@@ -10,17 +10,18 @@ import Cocoa
 import QuartzCore
 
 internal extension CALayer {
-    internal func animate(color: CGColor, keyPath: String, duration: Double) {
-        if value(forKey: keyPath) as! CGColor? != color {
-            let animation = CABasicAnimation(keyPath: keyPath)
-            animation.toValue = color
-            animation.fromValue = value(forKey: keyPath)
-            animation.duration = duration
-            animation.isRemovedOnCompletion = false
-            animation.fillMode = kCAFillModeForwards
-            add(animation, forKey: keyPath)
-            setValue(color, forKey: keyPath)
+    internal func animate(color newColor: CGColor, keyPath: String, duration: Double) {
+        let currentColor = value(forKey: keyPath) as! CGColor?
+        if currentColor == newColor {
+            return
         }
+        
+        let animation = CABasicAnimation(keyPath: keyPath)
+        animation.toValue = newColor
+        animation.fromValue = currentColor
+        animation.duration = duration
+        add(animation, forKey: keyPath)
+        setValue(newColor, forKey: keyPath)
     }
 }
 
@@ -291,12 +292,7 @@ open class FlatButton: NSButton, CALayerDelegate {
         layer?.animate(color: bgColor.cgColor, keyPath: "backgroundColor", duration: duration)
         layer?.animate(color: borderColor.cgColor, keyPath: "borderColor", duration: duration)
         
-        /*  I started seeing high (~5%) background CPU usage in apps using
-         FlatButton, and was able to track it down to background CATextLayer animation calls
-         happening constantly, originating from the call below. It could be a CATextLayer bug.
-         For now I'm going with setting the color instantly as it fixes this issue. */
-        //titleLayer.animate(color: titleColor.cgColor, keyPath: "foregroundColor", duration: duration)
-        titleLayer.foregroundColor = titleColor.cgColor
+        titleLayer.animate(color: titleColor.cgColor, keyPath: "foregroundColor", duration: duration)
         
         if alternateImage == nil {
             iconLayer.animate(color: imageColor.cgColor, keyPath: "backgroundColor", duration: duration)
