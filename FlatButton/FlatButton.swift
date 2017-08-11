@@ -275,19 +275,7 @@ open class FlatButton: NSButton, CALayerDelegate {
         addTrackingArea(trackingArea)
     }
     
-    // MARK: Animations
-    
-    internal func removeAnimations() {
-        layer?.removeAllAnimations()
-        if layer?.sublayers != nil {
-            for subLayer in (layer?.sublayers)! {
-                subLayer.removeAllAnimations()
-            }
-        }
-    }
-    
     public func animateColor(_ isOn: Bool) {
-        removeAnimations()
         let duration = isOn ? onAnimationDuration : offAnimationDuration
         let bgColor = isOn ? activeButtonColor : buttonColor
         let titleColor = isOn ? activeTextColor : textColor
