@@ -111,6 +111,7 @@ open class FlatButton: NSButton, CALayerDelegate {
             animateColor(state == .onState)
         }
     }
+    @IBInspectable public var disabledTextColor: NSColor = NSColor.gray
     
     override open var title: String {
         didSet {
@@ -140,6 +141,8 @@ open class FlatButton: NSButton, CALayerDelegate {
     override open var isEnabled: Bool {
         didSet {
             alphaValue = isEnabled ? 1 : 0.5
+            titleLayer.foregroundColor = isEnabled ? textColor.cgColor : disabledTextColor.cgColor
+            titleLayer.setNeedsDisplay()
         }
     }
     
