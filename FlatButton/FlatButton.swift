@@ -194,6 +194,7 @@ open class FlatButton: NSButton, CALayerDelegate {
         titleLayer.string = title
         titleLayer.font = font
         titleLayer.fontSize = font.pointSize
+        titleLayer.foregroundColor = textColor.cgColor
         positionTitleAndImage()
     }
     
